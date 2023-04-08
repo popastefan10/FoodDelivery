@@ -6,24 +6,28 @@ public class Product extends Entity {
     private UUID restaurantId;
     private String name;
     private Integer quantity;
-    private String unitLabel;
+    private String measurementUnit;
     private Float price;
 
     public Product() {
         super();
     }
 
-    public Product(UUID restaurantId, String name, Integer quantity, String unitLabel, Float price) {
+    public Product(UUID restaurantId, String name, Integer quantity, String measurementUnit, Float price) {
         super();
         this.restaurantId = restaurantId;
         this.name = name;
         this.quantity = quantity;
-        this.unitLabel = unitLabel;
+        this.measurementUnit = measurementUnit;
         this.price = price;
     }
 
     public UUID getRestaurantId() {
         return restaurantId;
+    }
+
+    public void setRestaurantId(UUID restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public String getName() {
@@ -42,12 +46,12 @@ public class Product extends Entity {
         this.quantity = quantity;
     }
 
-    public String getUnitLabel() {
-        return unitLabel;
+    public String getMeasurementUnit() {
+        return measurementUnit;
     }
 
-    public void setUnitLabel(String unitLabel) {
-        this.unitLabel = unitLabel;
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
     }
 
     public Float getPrice() {

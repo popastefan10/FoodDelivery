@@ -8,31 +8,40 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class CustomerService extends PersonService {
-    Map<UUID, Customer> customersMap = new HashMap<UUID, Customer>();
+public class CustomerService {
+    private static final Map<UUID, Customer> customersMap = new HashMap<UUID, Customer>();
 
-    public Customer readCustomer(Scanner in) {
+    public static Customer readCustomer(Scanner in) {
         System.out.println("Creating a new customer...");
         Customer customer = new Customer();
 
-        super.readPerson(in, customer);
+        PersonService.readPerson(in, customer);
 
         customer.setAddress(IOUtils.readString(in, "Address: ", 1));
 
         return customer;
     }
 
-    public void printCustomer(Customer customer) {
+    public static void printCustomer(Customer customer) {
         System.out.println("Customer with id " + customer.getId() + ":");
-        super.printPerson(customer);
+        PersonService.printPerson(customer);
         System.out.println("\tAddress: " + customer.getAddress());
     }
 
-    public void addCustomer(Customer customer) {
+    public static void printCustomerShort(Customer customer) {
+        System.out.printf("\t%s\t%s %s\n", customer.getId().toString(), customer.getFirstName(),
+                          customer.getLastName());
+    }
+
+    public static void addCustomer(Customer customer) {
         customersMap.put(customer.getId(), customer);
     }
 
-    public Customer[] getCustomers() {
+    public static Customer[] getCustomers() {
         return customersMap.values().toArray(new Customer[0]);
+    }
+
+    public static Customer getCustomerById(UUID customerId) {
+        return customersMap.get(customerId);
     }
 }

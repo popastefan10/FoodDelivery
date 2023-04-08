@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class IOUtils {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -15,6 +16,10 @@ public class IOUtils {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+
+    public static void printError(String errorMessage) {
+        System.out.println(ANSI_RED + errorMessage + ANSI_RESET);
+    }
 
     public static String readString(Scanner in, String prompt, int indentation) {
         System.out.print("\t".repeat(indentation) + prompt);
@@ -31,7 +36,7 @@ public class IOUtils {
             try {
                 return LocalTime.parse(localTimeString);
             } catch (DateTimeParseException e) {
-                System.out.println(errorMessage);
+                printError(errorMessage);
             }
         }
     }
@@ -46,7 +51,37 @@ public class IOUtils {
             try {
                 return Integer.parseInt(intString);
             } catch (NumberFormatException e) {
-                System.out.println(errorMessage);
+                printError(errorMessage);
+            }
+        }
+    }
+
+    public static float readFloat(Scanner in, String prompt, int indentation) {
+        prompt = "\t".repeat(indentation) + prompt;
+        String errorMessage = "\t".repeat(indentation) + "Please enter a valid real number!";
+
+        while (true) {
+            System.out.print(prompt);
+            String floatString = in.nextLine();
+            try {
+                return Float.parseFloat(floatString);
+            } catch (NumberFormatException | NullPointerException e) {
+                printError(errorMessage);
+            }
+        }
+    }
+
+    public static UUID readUUID(Scanner in, String prompt, int indentation) {
+        prompt = "\t".repeat(indentation) + prompt;
+        String errorMessage = "\t".repeat(indentation) + "Please enter a valid UUID!";
+
+        while (true) {
+            System.out.print(prompt);
+            String uuidString = in.nextLine();
+            try {
+                return UUID.fromString(uuidString);
+            } catch (IllegalArgumentException e) {
+                printError(errorMessage);
             }
         }
     }

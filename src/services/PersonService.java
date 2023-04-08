@@ -5,15 +5,15 @@ import utils.IOUtils;
 
 import java.util.Scanner;
 
-public class PersonService extends UserService {
-    public void readPerson(Scanner in, Person person) {
-        super.readUser(in, person);
+public class PersonService {
+    public static void readPerson(Scanner in, Person person) {
+        UserService.readUser(in, person);
         person.setFirstName(IOUtils.readString(in, "First name: ", 1));
         person.setLastName(IOUtils.readString(in, "Last name: ", 1));
     }
 
-    public void printPerson(Person person) {
-        super.printUser(person);
+    public static void printPerson(Person person) {
+        UserService.printUser(person);
         System.out.println("\tFirst name: " + person.getFirstName());
         System.out.println("\tLast name: " + person.getLastName());
     }
