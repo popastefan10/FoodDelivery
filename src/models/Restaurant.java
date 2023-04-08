@@ -7,19 +7,20 @@ public class Restaurant extends User {
     private String address;
     private LocalTime startOfWorkingHours;
     private LocalTime endOfWorkingHours;
-    private Boolean availableForDelivery;
 
     public Restaurant() {
         super();
     }
 
-    public Restaurant(String email, String phoneNumber, String name, String address, LocalTime startOfWorkingHours, LocalTime endOfWorkingHours, Boolean availableForDelivery) {
+    public Restaurant(
+            String email, String phoneNumber, String name, String address, LocalTime startOfWorkingHours,
+            LocalTime endOfWorkingHours
+    ) {
         super(email, phoneNumber);
         this.name = name;
         this.address = address;
         this.startOfWorkingHours = startOfWorkingHours;
         this.endOfWorkingHours = endOfWorkingHours;
-        this.availableForDelivery = availableForDelivery;
     }
 
     public String getName() {
@@ -52,13 +53,5 @@ public class Restaurant extends User {
 
     public void setEndOfWorkingHours(LocalTime endOfWorkingHours) {
         this.endOfWorkingHours = endOfWorkingHours;
-    }
-
-    public Boolean getAvailableForDelivery() {
-        return availableForDelivery;
-    }
-
-    public void setAvailableForDelivery(Boolean availableForDelivery) {
-        this.availableForDelivery = availableForDelivery;
     }
 }
