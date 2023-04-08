@@ -6,7 +6,7 @@ import utils.IOUtils;
 import java.util.Scanner;
 
 public class UserService {
-    public void createUser(Scanner in, User user) {
+    public void readUser(Scanner in, User user) {
         user.setEmail(IOUtils.readString(in, "Email: ", 1));
         user.setPhoneNumber(IOUtils.readString(in, "Phone number: ", 1));
     }

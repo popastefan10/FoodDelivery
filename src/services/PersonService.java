@@ -6,8 +6,8 @@ import utils.IOUtils;
 import java.util.Scanner;
 
 public class PersonService extends UserService {
-    public void createPerson(Scanner in, Person person) {
-        super.createUser(in, person);
+    public void readPerson(Scanner in, Person person) {
+        super.readUser(in, person);
         person.setFirstName(IOUtils.readString(in, "First name: ", 1));
         person.setLastName(IOUtils.readString(in, "Last name: ", 1));
     }

@@ -6,11 +6,11 @@ import utils.IOUtils;
 import java.util.Scanner;
 
 public class CustomerService extends PersonService {
-    public Customer createCustomer(Scanner in) {
+    public Customer readCustomer(Scanner in) {
         System.out.println("Creating a new customer...");
         Customer customer = new Customer();
 
-        super.createPerson(in, customer);
+        super.readPerson(in, customer);
 
         customer.setAddress(IOUtils.readString(in, "Address: ", 1));
 
