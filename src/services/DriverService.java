@@ -1,16 +1,14 @@
 package services;
 
-import models.Customer;
 import models.Driver;
 import utils.IOUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class DriverService {
-    private static final Map<UUID, Driver> driversMap = new HashMap<UUID, Driver>();
+    private static final Map<Integer, Driver> driversMap = new HashMap<>();
 
     public static Driver readDriver(Scanner in) {
         System.out.println("Creating a new driver...");
@@ -32,7 +30,7 @@ public class DriverService {
     }
 
     public static void printDriverShort(Driver driver) {
-        System.out.printf("\t%s\t%s %s\n", driver.getId().toString(), driver.getFirstName(), driver.getLastName());
+        System.out.printf("\t%s\t%s %s\n", driver.getId(), driver.getFirstName(), driver.getLastName());
     }
 
     public static void addDriver(Driver driver) {
@@ -43,7 +41,7 @@ public class DriverService {
         return driversMap.values().toArray(new Driver[0]);
     }
 
-    public static Driver getDriverById(UUID driverId) {
+    public static Driver getDriverById(Integer driverId) {
         return driversMap.get(driverId);
     }
 }

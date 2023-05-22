@@ -1,19 +1,18 @@
 package services;
 
-import models.Product;
 import models.Restaurant;
 import utils.IOUtils;
 
 import java.util.*;
 
 public class RestaurantService extends UserService {
-    private static final Map<UUID, Restaurant> restaurantsMap = new HashMap<UUID, Restaurant>();
+    private static final Map<Integer, Restaurant> restaurantsMap = new HashMap<>();
 
     public Restaurant readRestaurant(Scanner in) {
         System.out.println("Creating a new restaurant...");
         Restaurant restaurant = new Restaurant();
 
-        super.readUser(in, restaurant);
+        readUser(in, restaurant);
 
         restaurant.setName(IOUtils.readString(in, "Name: ", 1));
         restaurant.setAddress(IOUtils.readString(in, "Address: ", 1));
@@ -25,8 +24,8 @@ public class RestaurantService extends UserService {
     }
 
     public void printRestaurant(Restaurant restaurant) {
-        System.out.println("Restaurant with id " + restaurant.getId().toString() + ":");
-        super.printUser(restaurant);
+        System.out.println("Restaurant with id " + restaurant.getId() + ":");
+        printUser(restaurant);
         System.out.println("\tName: " + restaurant.getName());
         System.out.println("\tAddress: " + restaurant.getAddress());
         System.out.println("\tStart of working hours: " + restaurant.getStartOfWorkingHours());
@@ -45,13 +44,13 @@ public class RestaurantService extends UserService {
         return restaurantsMap.values().toArray(new Restaurant[0]);
     }
 
-    public static UUID readRestaurantId(Scanner in) {
+    public static Integer readRestaurantId(Scanner in) {
         System.out.println("Here are all available restaurants:");
         Arrays.stream(getRestaurants()).forEach(RestaurantService::printRestaurantShort);
         System.out.println();
 
         while (true) {
-            UUID restaurantId = IOUtils.readUUID(in, "Choose a restaurant id: ", 0);
+            Integer restaurantId = IOUtils.readInt(in, "Choose a restaurant id: ", 0);
             if (restaurantsMap.containsKey(restaurantId))
                 return restaurantId;
             System.out.println(IOUtils.ANSI_RED + "There is no restaurant with this id!" + IOUtils.ANSI_RESET);

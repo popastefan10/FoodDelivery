@@ -4,6 +4,10 @@ out/
 !**/src/test/**/out/
 .idea/workspace.xml
 .idea/**/uiDesigner.xml
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dataSources
 
 ### Eclipse ###
 .apt_generated
@@ -29,3 +33,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/libraries/postgresql_42_6_0.xml
+/.idea/sqldialects.xml
+/.idea/git_toolbox_prj.xml

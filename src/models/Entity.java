@@ -1,15 +1,14 @@
 package models;
 
-import java.util.UUID;
-
 public abstract class Entity {
-    private UUID id;
+    static int count = 0;
+    private final int id;
 
     public Entity() {
-        id = UUID.randomUUID();
+        id = ++count;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 }

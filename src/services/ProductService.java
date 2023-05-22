@@ -1,22 +1,20 @@
 package services;
 
 import models.Product;
-import models.Restaurant;
 import utils.IOUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class ProductService {
-    private static final Map<UUID, Product> productsMap = new HashMap<>();
+    private static final Map<Integer, Product> productsMap = new HashMap<>();
 
     public static Product readProduct(Scanner in) {
         System.out.println("Creating a new product...");
         Product product = new Product();
 
-        UUID restaurantId = RestaurantService.readRestaurantId(in);
+        Integer restaurantId = RestaurantService.readRestaurantId(in);
         product.setRestaurantId(restaurantId);
 
         product.setName(IOUtils.readString(in, "Name: ", 1));
@@ -28,7 +26,7 @@ public class ProductService {
     }
 
     public static void printProduct(Product product) {
-        System.out.println("Product with id " + product.getId().toString() + ":");
+        System.out.println("Product with id " + product.getId() + ":");
         System.out.println("\tRestaurant id: " + product.getRestaurantId());
         System.out.println("\tName: " + product.getName());
         System.out.println("\tQuantity: " + product.getQuantity());
@@ -37,8 +35,8 @@ public class ProductService {
     }
 
     public static void printProductShort(Product product) {
-        System.out.printf("\t%s %s, %d %s, %f\n", product.getId().toString(), product.getName(),
-                          product.getQuantity(), product.getMeasurementUnit(), product.getPrice());
+        System.out.printf("\t%s %s, %d %s, %f\n", product.getId(), product.getName(), product.getQuantity(),
+                          product.getMeasurementUnit(), product.getPrice());
     }
 
     public static void addProduct(Product product) {

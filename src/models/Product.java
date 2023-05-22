@@ -1,9 +1,7 @@
 package models;
 
-import java.util.UUID;
-
 public class Product extends Entity {
-    private UUID restaurantId;
+    private Integer restaurantId;
     private String name;
     private Integer quantity;
     private String measurementUnit;
@@ -13,7 +11,7 @@ public class Product extends Entity {
         super();
     }
 
-    public Product(UUID restaurantId, String name, Integer quantity, String measurementUnit, Float price) {
+    public Product(Integer restaurantId, String name, Integer quantity, String measurementUnit, Float price) {
         super();
         this.restaurantId = restaurantId;
         this.name = name;
@@ -22,11 +20,11 @@ public class Product extends Entity {
         this.price = price;
     }
 
-    public UUID getRestaurantId() {
+    public Integer getRestaurantId() {
         return restaurantId;
     }
 
-    public void setRestaurantId(UUID restaurantId) {
+    public void setRestaurantId(Integer restaurantId) {
         this.restaurantId = restaurantId;
     }
 
