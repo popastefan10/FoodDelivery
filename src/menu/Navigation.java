@@ -54,6 +54,7 @@ public class Navigation {
         Menu mainMenu = new Menu("Welcome to the food delivery app!");
 
         mainMenu.addOption("Manage customers", () -> navigate(MenuID.CUSTOMERS));
+        mainMenu.addOption("Manage drivers", () -> navigate(MenuID.DRIVERS));
         mainMenu.addOption("Manage orders", () -> navigate(MenuID.ORDERS));
         mainMenu.addOption("Manage products", () -> navigate(MenuID.PRODUCTS));
         mainMenu.addOption("Exit", () -> navigate(MenuID.EXIT));
@@ -107,17 +108,23 @@ public class Navigation {
             Driver[] drivers = DriverService.getDrivers();
             if (drivers.length == 0)
                 IOUtils.printError("There are no drivers in the database! Try creating one first.\n");
-            for (Driver customer : drivers) {
-                System.out.println();
-                DriverService.printDriver(customer);
-            }
+            else
+                Arrays.stream(drivers).forEach(DriverService::printDriverShort);
         });
-        driversMenu.addOption("Get driver by id", () -> {
+        driversMenu.addOption("Get driver", () -> {
             Driver driver = DriverService.getDriverById(IOUtils.readInt(in, "Enter driver id: ", 0));
             if (driver == null)
                 IOUtils.printError("There is no driver with this id!");
             else
                 DriverService.printDriver(driver);
+        });
+        driversMenu.addOption("Delete driver", () -> {
+            int id = IOUtils.readInt(in, "Enter driver id: ", 0);
+            boolean result = DriverService.deleteDriver(id);
+            if (result)
+                System.out.println("Driver deleted successfully!");
+            else
+                IOUtils.printError("There is no driver with this id!");
         });
         driversMenu.addOption("Back", () -> navigate(MenuID.BACK));
 

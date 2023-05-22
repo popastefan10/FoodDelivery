@@ -1,23 +1,20 @@
 package services;
 
 import models.Driver;
+import repositories.DriverRepository;
 import utils.IOUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class DriverService {
-    private static final Map<Integer, Driver> driversMap = new HashMap<>();
+    private static final DriverRepository driverRepository = DriverRepository.getInstance();
 
     public static Driver readDriver(Scanner in) {
         System.out.println("Creating a new driver...");
         Driver driver = new Driver();
 
         PersonService.readPerson(in, driver);
-
-        driver.setStartOfWorkingHours(IOUtils.readLocalTime(in, "Start of working hours (in HH:mm:ss format): ", 1));
-        driver.setEndOfWorkingHours(IOUtils.readLocalTime(in, "End of working hours (in HH:mm:ss format): ", 1));
+        driver.setRating(IOUtils.readFloat(in, "Rating (0-5): ", 1));
 
         return driver;
     }
@@ -25,8 +22,7 @@ public class DriverService {
     public static void printDriver(Driver driver) {
         System.out.println("Driver with id " + driver.getId() + ":");
         PersonService.printPerson(driver);
-        System.out.println("\tStart of working hours: " + driver.getStartOfWorkingHours());
-        System.out.println("\tEnd of working hours: " + driver.getEndOfWorkingHours());
+        System.out.println("\tRating: " + driver.getRating());
     }
 
     public static void printDriverShort(Driver driver) {
@@ -34,14 +30,18 @@ public class DriverService {
     }
 
     public static void addDriver(Driver driver) {
-        driversMap.put(driver.getId(), driver);
+        driverRepository.create(driver);
     }
 
     public static Driver[] getDrivers() {
-        return driversMap.values().toArray(new Driver[0]);
+        return driverRepository.getAll().values().toArray(new Driver[0]);
     }
 
     public static Driver getDriverById(Integer driverId) {
-        return driversMap.get(driverId);
+        return driverRepository.getById(driverId);
+    }
+
+    public static boolean deleteDriver(Integer driverId) {
+        return driverRepository.delete(driverId);
     }
 }

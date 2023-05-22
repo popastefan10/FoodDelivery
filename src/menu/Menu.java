@@ -1,20 +1,17 @@
 package menu;
 
-import models.Customer;
-import models.Driver;
-import models.Restaurant;
 import utils.IOUtils;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-    private String description;
-    private ArrayList<MenuOption> menuOptions;
+    private final String description;
+    private final ArrayList<MenuOption> menuOptions;
 
     public Menu(String description) {
         this.description = description;
-        this.menuOptions = new ArrayList<MenuOption>();
+        this.menuOptions = new ArrayList<>();
     }
 
     public void addOption(String description, Runnable action) {
@@ -22,6 +19,7 @@ public class Menu {
     }
 
     public void run(Scanner in) {
+        System.out.println();
         System.out.println(IOUtils.ANSI_GREEN + description + IOUtils.ANSI_RESET);
         System.out.println();
         System.out.println("Available actions are:");

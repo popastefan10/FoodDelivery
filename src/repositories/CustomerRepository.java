@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerRepository {
+public class CustomerRepository implements GenericRepository<Customer> {
     private static CustomerRepository instance = null;
     private final Connection connection;
 
@@ -67,7 +67,7 @@ public class CustomerRepository {
         return customers;
     }
 
-    public Customer getById(int id) {
+    public Customer getById(Integer id) {
         String sql = "SELECT * FROM customers WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -90,14 +90,35 @@ public class CustomerRepository {
         return null;
     }
 
-    public boolean delete(int id) {
+    public Customer update(Customer customer) {
+        String sql = "UPDATE customers SET email = ?, \"phone-number\" = ?, \"first-name\" = ?, \"last-name\" = ?, address = ? WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, customer.getEmail());
+            statement.setString(2, customer.getPhoneNumber());
+            statement.setString(3, customer.getFirstName());
+            statement.setString(4, customer.getLastName());
+            statement.setString(5, customer.getAddress());
+            statement.setInt(6, customer.getId());
+            int result = statement.executeUpdate();
+            statement.close();
+
+            return result > 0 ? customer : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM customers WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
             statement.close();
-            
+
             return result > 0;
         } catch (Exception e) {
             e.printStackTrace();
