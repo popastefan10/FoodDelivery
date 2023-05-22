@@ -2,7 +2,7 @@ package models;
 
 public abstract class Entity {
     static int count = 0;
-    private final int id;
+    private int id;
 
     public Entity() {
         id = ++count;
@@ -10,5 +10,9 @@ public abstract class Entity {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

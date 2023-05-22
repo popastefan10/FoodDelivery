@@ -10,7 +10,7 @@ public class DatabaseConnection {
     private DatabaseConnection() {
     }
 
-    public static Connection getConnection() {
+    public static Connection getInstance() {
         if (connection == null) {
             // Load the driver class
             try {

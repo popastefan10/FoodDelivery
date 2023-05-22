@@ -16,7 +16,7 @@ public class Navigation {
     private static Navigation instance = null;
     private final Scanner in;
 
-    private static enum MenuID {
+    private enum MenuID {
         MAIN,
         CUSTOMERS,
         DRIVERS,
@@ -26,8 +26,8 @@ public class Navigation {
         BACK,
         EXIT
     }
-    private final Map<MenuID, Menu> menus = new HashMap<MenuID, Menu>();
-    private final List<Menu> menusStack = new ArrayList<Menu>();
+    private final Map<MenuID, Menu> menus = new HashMap<>();
+    private final List<Menu> menusStack = new ArrayList<>();
 
     private Navigation(Scanner in) {
         this.in = in;
@@ -125,12 +125,11 @@ public class Navigation {
     }
 
     public void registerRestaurantsMenu() {
-        RestaurantService restaurantService = new RestaurantService();
         Menu restaurantsMenu = new Menu("Restaurants");
 
         restaurantsMenu.addOption("Create a new restaurant", () -> {
-            Restaurant restaurant = restaurantService.readRestaurant(in);
-            restaurantService.addRestaurant(restaurant);
+            Restaurant restaurant = RestaurantService.readRestaurant(in);
+            RestaurantService.addRestaurant(restaurant);
             System.out.println("Restaurant added successfully!");
         });
         restaurantsMenu.addOption("List all restaurants", () -> {

@@ -70,19 +70,4 @@ public class IOUtils {
             }
         }
     }
-
-    public static UUID readUUID(Scanner in, String prompt, int indentation) {
-        prompt = "\t".repeat(indentation) + prompt;
-        String errorMessage = "\t".repeat(indentation) + "Please enter a valid UUID!";
-
-        while (true) {
-            System.out.print(prompt);
-            String uuidString = in.nextLine();
-            try {
-                return UUID.fromString(uuidString);
-            } catch (IllegalArgumentException e) {
-                printError(errorMessage);
-            }
-        }
-    }
 }

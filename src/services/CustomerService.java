@@ -4,13 +4,10 @@ import models.Customer;
 import repositories.CustomerRepository;
 import utils.IOUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class CustomerService {
     private static final CustomerRepository customerRepository = CustomerRepository.getInstance();
-    private static final Map<Integer, Customer> customersMap = new HashMap<>();
 
     public static Customer readCustomer(Scanner in) {
         System.out.println("Creating a new customer...");
@@ -33,16 +30,19 @@ public class CustomerService {
                           customer.getLastName());
     }
 
-    public static void addCustomer(Customer customer) {
-        customersMap.put(customer.getId(), customer);
-        customerRepository.create(customer);
+    public static Customer create(Customer customer) {
+        return customerRepository.create(customer);
     }
 
-    public static Customer[] getCustomers() {
-        return customersMap.values().toArray(new Customer[0]);
+    public static Customer[] getAll() {
+        return customerRepository.getAll().values().toArray(new Customer[0]);
     }
 
-    public static Customer getCustomerById(Integer customerId) {
-        return customersMap.get(customerId);
+    public static Customer getById(Integer id) {
+        return customerRepository.getById(id);
+    }
+
+    public static boolean delete(Integer id) {
+        return customerRepository.delete(id);
     }
 }

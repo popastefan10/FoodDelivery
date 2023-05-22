@@ -5,15 +5,14 @@ import utils.IOUtils;
 
 import java.util.*;
 
-public class RestaurantService extends UserService {
+public class RestaurantService {
     private static final Map<Integer, Restaurant> restaurantsMap = new HashMap<>();
 
-    public Restaurant readRestaurant(Scanner in) {
+    public static Restaurant readRestaurant(Scanner in) {
         System.out.println("Creating a new restaurant...");
         Restaurant restaurant = new Restaurant();
-
-        readUser(in, restaurant);
-
+        restaurant.setEmail(IOUtils.readString(in, "Email: ", 1));
+        restaurant.setPhoneNumber(IOUtils.readString(in, "Phone number: ", 1));
         restaurant.setName(IOUtils.readString(in, "Name: ", 1));
         restaurant.setAddress(IOUtils.readString(in, "Address: ", 1));
         restaurant.setStartOfWorkingHours(
@@ -23,9 +22,10 @@ public class RestaurantService extends UserService {
         return restaurant;
     }
 
-    public void printRestaurant(Restaurant restaurant) {
+    public static void printRestaurant(Restaurant restaurant) {
         System.out.println("Restaurant with id " + restaurant.getId() + ":");
-        printUser(restaurant);
+        System.out.println("\tEmail: " + restaurant.getEmail());
+        System.out.println("\tPhone number: " + restaurant.getPhoneNumber());
         System.out.println("\tName: " + restaurant.getName());
         System.out.println("\tAddress: " + restaurant.getAddress());
         System.out.println("\tStart of working hours: " + restaurant.getStartOfWorkingHours());
@@ -36,7 +36,7 @@ public class RestaurantService extends UserService {
         System.out.printf("\t%s %s, %s%n", restaurant.getId(), restaurant.getName(), restaurant.getAddress());
     }
 
-    public void addRestaurant(Restaurant restaurant) {
+    public static void addRestaurant(Restaurant restaurant) {
         restaurantsMap.put(restaurant.getId(), restaurant);
     }
 
