@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class ProductService {
     public static final ProductRepository productRepository = ProductRepository.getInstance();
+    private static final AuditService auditService = AuditService.getInstance();
 
     public static Product readProduct(Scanner in) {
         System.out.println("Creating a new product...");
@@ -68,26 +69,32 @@ public class ProductService {
     }
 
     public static Product create(Product product) {
+        auditService.logAction("product_create");
         return productRepository.create(product);
     }
 
     public static Product[] getAll() {
+        auditService.logAction("product_get_all");
         return productRepository.getAll().values().toArray(new Product[0]);
     }
 
     public static Product[] getAllByRestaurantId(Integer restaurantId) {
+        auditService.logAction("product_get_all_by_restaurant_id");
         return productRepository.getAllByRestaurantId(restaurantId).values().toArray(new Product[0]);
     }
 
     public static Product getById(Integer id) {
+        auditService.logAction("product_get_by_id");
         return productRepository.getById(id);
     }
 
     public static Product update(Product product) {
+        auditService.logAction("product_update");
         return productRepository.update(product);
     }
 
     public static boolean delete(Integer id) {
+        auditService.logAction("product_delete");
         return productRepository.delete(id);
     }
 }

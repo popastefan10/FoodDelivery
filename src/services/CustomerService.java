@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class CustomerService {
     private static final CustomerRepository customerRepository = CustomerRepository.getInstance();
+    private static final AuditService auditService = AuditService.getInstance();
 
     public static Customer readCustomer(Scanner in) {
         System.out.println("Creating a new customer...");
@@ -58,22 +59,27 @@ public class CustomerService {
     }
 
     public static Customer create(Customer customer) {
+        auditService.logAction("customer_create");
         return customerRepository.create(customer);
     }
 
     public static Customer[] getAll() {
+        auditService.logAction("customer_get_all");
         return customerRepository.getAll().values().toArray(new Customer[0]);
     }
 
     public static Customer getById(Integer id) {
+        auditService.logAction("customer_get_by_id");
         return customerRepository.getById(id);
     }
 
     public static Customer update(Customer customer) {
+        auditService.logAction("customer_update");
         return customerRepository.update(customer);
     }
 
     public static boolean delete(Integer id) {
+        auditService.logAction("customer_delete");
         return customerRepository.delete(id);
     }
 }

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class DriverService {
     private static final DriverRepository driverRepository = DriverRepository.getInstance();
+    private static final AuditService auditService = AuditService.getInstance();
 
     public static Driver readDriver(Scanner in) {
         System.out.println("Creating a new driver...");
@@ -57,22 +58,27 @@ public class DriverService {
     }
 
     public static void create(Driver driver) {
+        auditService.logAction("driver_create");
         driverRepository.create(driver);
     }
 
     public static Driver[] getAll() {
+        auditService.logAction("driver_get_all");
         return driverRepository.getAll().values().toArray(new Driver[0]);
     }
 
     public static Driver getById(Integer driverId) {
+        auditService.logAction("driver_get_by_id");
         return driverRepository.getById(driverId);
     }
 
     public static Driver update(Driver driver) {
+        auditService.logAction("driver_update");
         return driverRepository.update(driver);
     }
 
     public static boolean delete(Integer driverId) {
+        auditService.logAction("driver_delete");
         return driverRepository.delete(driverId);
     }
 }

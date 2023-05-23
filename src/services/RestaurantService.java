@@ -8,6 +8,7 @@ import java.util.*;
 
 public class RestaurantService {
     private static final RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
+    private static final AuditService auditService = AuditService.getInstance();
 
     public static Restaurant readRestaurant(Scanner in) {
         System.out.println("Creating a new restaurant...");
@@ -64,22 +65,27 @@ public class RestaurantService {
     }
 
     public static Restaurant create(Restaurant restaurant) {
+        auditService.logAction("restaurant_create");
         return restaurantRepository.create(restaurant);
     }
 
     public static Restaurant[] getAll() {
+        auditService.logAction("restaurant_get_all");
         return restaurantRepository.getAll().values().toArray(new Restaurant[0]);
     }
 
     public static Restaurant getById(Integer id) {
+        auditService.logAction("restaurant_get_by_id");
         return restaurantRepository.getById(id);
     }
 
     public static Restaurant update(Restaurant restaurant) {
+        auditService.logAction("restaurant_update");
         return restaurantRepository.update(restaurant);
     }
 
     public static boolean delete(Integer id) {
+        auditService.logAction("restaurant_delete");
         return restaurantRepository.delete(id);
     }
 }

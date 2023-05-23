@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class OrderService {
     private final static OrderRepository orderRepository = OrderRepository.getInstance();
     private final static OrderItemRepository orderItemRepository = OrderItemRepository.getInstance();
+    private final static AuditService auditService = AuditService.getInstance();
 
     public static Order readOrder(Scanner in) {
         System.out.println("Creating a new order...");
@@ -53,6 +54,7 @@ public class OrderService {
     }
 
     public static Order create(Order order) {
+        auditService.logAction("order_create");
         var createdOrder = orderRepository.create(order);
         for (var item : order.getItems().values()) {
             item.setOrderId(order.getId());
@@ -64,18 +66,22 @@ public class OrderService {
     }
 
     public static Order[] getAll() {
+        auditService.logAction("order_get_all");
         return orderRepository.getAll().values().toArray(new Order[0]);
     }
 
     public static Order getById(Integer id) {
+        auditService.logAction("order_get_by_id");
         return orderRepository.getById(id);
     }
 
     public static Order update(Order order) {
+        auditService.logAction("order_update");
         return orderRepository.update(order);
     }
 
     public static boolean delete(Integer id) {
+        auditService.logAction("order_delete");
         return orderRepository.delete(id);
     }
 }
