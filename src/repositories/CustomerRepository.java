@@ -40,7 +40,7 @@ public class CustomerRepository implements GenericRepository<Customer> {
 
             return customer;
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

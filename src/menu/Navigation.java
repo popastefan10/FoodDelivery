@@ -56,6 +56,7 @@ public class Navigation {
 
         mainMenu.addOption("Manage customers", () -> navigate(MenuID.CUSTOMERS));
         mainMenu.addOption("Manage drivers", () -> navigate(MenuID.DRIVERS));
+        mainMenu.addOption("Manage restaurants", () -> navigate(MenuID.RESTAURANTS));
         mainMenu.addOption("Manage orders", () -> navigate(MenuID.ORDERS));
         mainMenu.addOption("Manage products", () -> navigate(MenuID.PRODUCTS));
         mainMenu.addOption("Exit", () -> navigate(MenuID.EXIT));
@@ -163,15 +164,44 @@ public class Navigation {
 
         restaurantsMenu.addOption("Create a new restaurant", () -> {
             Restaurant restaurant = RestaurantService.readRestaurant(in);
-            RestaurantService.addRestaurant(restaurant);
+            RestaurantService.create(restaurant);
             System.out.println("Restaurant added successfully!");
         });
         restaurantsMenu.addOption("List all restaurants", () -> {
-            Restaurant[] restaurants = RestaurantService.getRestaurants();
+            Restaurant[] restaurants = RestaurantService.getAll();
             if (restaurants.length == 0)
                 IOUtils.printError("There are no restaurants in the database! Try creating one first.\n");
             else
                 Arrays.stream(restaurants).forEach(RestaurantService::printRestaurantShort);
+        });
+        restaurantsMenu.addOption("Get restaurant", () -> {
+            Restaurant restaurant = RestaurantService.getById(IOUtils.readInt(in, "Enter restaurant id: ", 0));
+            if (restaurant == null)
+                IOUtils.printError("There is no restaurant with this id!");
+            else
+                RestaurantService.printRestaurant(restaurant);
+        });
+        restaurantsMenu.addOption("Update restaurant", () -> {
+            int id = IOUtils.readInt(in, "Enter restaurant id: ", 0);
+            Restaurant restaurant = RestaurantService.getById(id);
+            if (restaurant == null)
+                IOUtils.printError("There is no restaurant with this id!");
+            else {
+                Restaurant updatedRestaurant = RestaurantService.update(
+                        RestaurantService.readRestaurant(in, restaurant));
+                if (updatedRestaurant == null)
+                    IOUtils.printError("Update failed!");
+                else
+                    System.out.println("Restaurant updated successfully!");
+            }
+        });
+        restaurantsMenu.addOption("Delete restaurant", () -> {
+            int id = IOUtils.readInt(in, "Enter restaurant id: ", 0);
+            boolean result = RestaurantService.delete(id);
+            if (result)
+                System.out.println("Restaurant deleted successfully!");
+            else
+                IOUtils.printError("There is no restaurant with this id!");
         });
         restaurantsMenu.addOption("Back", () -> navigate(MenuID.BACK));
 

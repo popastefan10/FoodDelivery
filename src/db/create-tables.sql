@@ -21,3 +21,15 @@ CREATE TABLE drivers
     "last-name"    VARCHAR NOT NULL,
     rating         REAL    NOT NULL
 );
+
+DROP TABLE IF EXISTS restaurants;
+
+CREATE TABLE restaurants
+(
+    id             SERIAL PRIMARY KEY,
+    email          VARCHAR NOT NULL,
+    "phone-number" VARCHAR NOT NULL,
+    name           VARCHAR NOT NULL,
+    address        VARCHAR NOT NULL,
+    rating         REAL    NOT NULL
+);

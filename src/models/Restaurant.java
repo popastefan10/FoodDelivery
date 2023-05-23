@@ -1,26 +1,21 @@
 package models;
 
-import java.time.LocalTime;
-
 public class Restaurant extends User {
     private String name;
     private String address;
-    private LocalTime startOfWorkingHours;
-    private LocalTime endOfWorkingHours;
+    private Float rating;
 
     public Restaurant() {
         super();
     }
 
     public Restaurant(
-            String email, String phoneNumber, String name, String address, LocalTime startOfWorkingHours,
-            LocalTime endOfWorkingHours
+            String email, String phoneNumber, String name, String address, Float rating
     ) {
         super(email, phoneNumber);
         this.name = name;
         this.address = address;
-        this.startOfWorkingHours = startOfWorkingHours;
-        this.endOfWorkingHours = endOfWorkingHours;
+        this.rating = rating;
     }
 
     public String getName() {
@@ -39,19 +34,11 @@ public class Restaurant extends User {
         this.address = address;
     }
 
-    public LocalTime getStartOfWorkingHours() {
-        return startOfWorkingHours;
+    public Float getRating() {
+        return rating;
     }
 
-    public void setStartOfWorkingHours(LocalTime startOfWorkingHours) {
-        this.startOfWorkingHours = startOfWorkingHours;
-    }
-
-    public LocalTime getEndOfWorkingHours() {
-        return endOfWorkingHours;
-    }
-
-    public void setEndOfWorkingHours(LocalTime endOfWorkingHours) {
-        this.endOfWorkingHours = endOfWorkingHours;
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }
