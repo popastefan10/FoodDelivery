@@ -57,8 +57,8 @@ public class Navigation {
         mainMenu.addOption("Manage customers", () -> navigate(MenuID.CUSTOMERS));
         mainMenu.addOption("Manage drivers", () -> navigate(MenuID.DRIVERS));
         mainMenu.addOption("Manage restaurants", () -> navigate(MenuID.RESTAURANTS));
-        mainMenu.addOption("Manage orders", () -> navigate(MenuID.ORDERS));
         mainMenu.addOption("Manage products", () -> navigate(MenuID.PRODUCTS));
+        mainMenu.addOption("Manage orders", () -> navigate(MenuID.ORDERS));
         mainMenu.addOption("Exit", () -> navigate(MenuID.EXIT));
 
         menus.put(MenuID.MAIN, mainMenu);
@@ -213,15 +213,43 @@ public class Navigation {
 
         productsMenu.addOption("Create a new product", () -> {
             Product product = ProductService.readProduct(in);
-            ProductService.addProduct(product);
+            ProductService.create(product);
             System.out.println("Product added successfully!");
         });
         productsMenu.addOption("List all products", () -> {
-            Product[] products = ProductService.getProducts();
+            Product[] products = ProductService.getAll();
             if (products.length == 0)
                 IOUtils.printError("There are no products in the database! Try creating one first.");
             else
                 Arrays.stream(products).forEach(ProductService::printProductShort);
+        });
+        productsMenu.addOption("Get product", () -> {
+            Product product = ProductService.getById(IOUtils.readInt(in, "Enter product id: ", 0));
+            if (product == null)
+                IOUtils.printError("There is no product with this id!");
+            else
+                ProductService.printProduct(product);
+        });
+        productsMenu.addOption("Update product", () -> {
+            int id = IOUtils.readInt(in, "Enter product id: ", 0);
+            Product product = ProductService.getById(id);
+            if (product == null)
+                IOUtils.printError("There is no product with this id!");
+            else {
+                Product updatedProduct = ProductService.update(ProductService.readProduct(in, product));
+                if (updatedProduct == null)
+                    IOUtils.printError("Update failed!");
+                else
+                    System.out.println("Product updated successfully!");
+            }
+        });
+        productsMenu.addOption("Delete product", () -> {
+            int id = IOUtils.readInt(in, "Enter product id: ", 0);
+            boolean result = ProductService.delete(id);
+            if (result)
+                System.out.println("Product deleted successfully!");
+            else
+                IOUtils.printError("There is no product with this id!");
         });
         productsMenu.addOption("Back", () -> navigate(MenuID.BACK));
 

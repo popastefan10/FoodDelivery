@@ -21,16 +21,16 @@ public class RestaurantService {
         return restaurant;
     }
 
-    public static Restaurant readRestaurant(Scanner in, Restaurant defaultRestaurant) {
+    public static Restaurant readRestaurant(Scanner in, Restaurant defaultValue) {
         System.out.println("Creating a new restaurant...");
         Restaurant restaurant = new Restaurant();
-        restaurant.setId(defaultRestaurant.getId());
+        restaurant.setId(defaultValue.getId());
 
-        restaurant.setEmail(IOUtils.readString(in, "Email", defaultRestaurant.getEmail(), 1));
-        restaurant.setPhoneNumber(IOUtils.readString(in, "Phone number", defaultRestaurant.getPhoneNumber(), 1));
-        restaurant.setName(IOUtils.readString(in, "Name", defaultRestaurant.getName(), 1));
-        restaurant.setAddress(IOUtils.readString(in, "Address", defaultRestaurant.getAddress(), 1));
-        restaurant.setRating(IOUtils.readFloat(in, "Rating", defaultRestaurant.getRating(), 1));
+        restaurant.setEmail(IOUtils.readString(in, "Email", defaultValue.getEmail(), 1));
+        restaurant.setPhoneNumber(IOUtils.readString(in, "Phone number", defaultValue.getPhoneNumber(), 1));
+        restaurant.setName(IOUtils.readString(in, "Name", defaultValue.getName(), 1));
+        restaurant.setAddress(IOUtils.readString(in, "Address", defaultValue.getAddress(), 1));
+        restaurant.setRating(IOUtils.readFloat(in, "Rating", defaultValue.getRating(), 1));
 
         return restaurant;
     }
@@ -46,6 +46,21 @@ public class RestaurantService {
 
     public static void printRestaurantShort(Restaurant restaurant) {
         System.out.printf("\t%s %s, %s%n", restaurant.getId(), restaurant.getName(), restaurant.getAddress());
+    }
+
+    public static Integer readRestaurantId(Scanner in) {
+        Map<Integer, Restaurant> restaurants = restaurantRepository.getAll();
+        System.out.println("Here are all available restaurants:");
+        for (Restaurant restaurant : restaurants.values())
+            printRestaurantShort(restaurant);
+        System.out.println();
+
+        while (true) {
+            Integer restaurantId = IOUtils.readInt(in, "Choose a restaurant id: ", 0);
+            if (restaurants.containsKey(restaurantId))
+                return restaurantId;
+            System.out.println(IOUtils.ANSI_RED + "There is no restaurant with this id!" + IOUtils.ANSI_RESET);
+        }
     }
 
     public static Restaurant create(Restaurant restaurant) {
@@ -66,20 +81,5 @@ public class RestaurantService {
 
     public static boolean delete(Integer id) {
         return restaurantRepository.delete(id);
-    }
-
-    public static Integer readRestaurantId(Scanner in) {
-        Map<Integer, Restaurant> restaurants = restaurantRepository.getAll();
-        System.out.println("Here are all available restaurants:");
-        for (Restaurant restaurant : restaurants.values())
-            printRestaurantShort(restaurant);
-        System.out.println();
-
-        while (true) {
-            Integer restaurantId = IOUtils.readInt(in, "Choose a restaurant id: ", 0);
-            if (restaurants.containsKey(restaurantId))
-                return restaurantId;
-            System.out.println(IOUtils.ANSI_RED + "There is no restaurant with this id!" + IOUtils.ANSI_RESET);
-        }
     }
 }

@@ -33,3 +33,15 @@ CREATE TABLE restaurants
     address        VARCHAR NOT NULL,
     rating         REAL    NOT NULL
 );
+
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products
+(
+    id                 SERIAL PRIMARY KEY,
+    restaurantId       INT REFERENCES restaurants (id),
+    "name"             VARCHAR NOT NULL,
+    quantity           REAL    NOT NULL,
+    "measurement-unit" VARCHAR NOT NULL,
+    price              REAL    NOT NULL
+);

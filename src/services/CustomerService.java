@@ -19,13 +19,13 @@ public class CustomerService {
         return customer;
     }
 
-    public static Customer readCustomer(Scanner in, Customer defaultCustomer) {
+    public static Customer readCustomer(Scanner in, Customer defaultValue) {
         System.out.println("Updating customer...");
         Customer customer = new Customer();
-        customer.setId(defaultCustomer.getId());
+        customer.setId(defaultValue.getId());
 
-        PersonService.readPerson(in, customer, defaultCustomer);
-        customer.setAddress(IOUtils.readString(in, "Address", defaultCustomer.getAddress(), 1));
+        PersonService.readPerson(in, customer, defaultValue);
+        customer.setAddress(IOUtils.readString(in, "Address", defaultValue.getAddress(), 1));
 
         return customer;
     }

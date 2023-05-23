@@ -3,7 +3,7 @@ package models;
 public class Product extends Entity {
     private Integer restaurantId;
     private String name;
-    private Integer quantity;
+    private Float quantity;
     private String measurementUnit;
     private Float price;
 
@@ -11,7 +11,7 @@ public class Product extends Entity {
         super();
     }
 
-    public Product(Integer restaurantId, String name, Integer quantity, String measurementUnit, Float price) {
+    public Product(Integer restaurantId, String name, Float quantity, String measurementUnit, Float price) {
         super();
         this.restaurantId = restaurantId;
         this.name = name;
@@ -36,11 +36,11 @@ public class Product extends Entity {
         this.name = name;
     }
 
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 

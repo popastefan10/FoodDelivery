@@ -19,13 +19,13 @@ public class DriverService {
         return driver;
     }
 
-    public static Driver readDriver(Scanner in, Driver defaultDriver) {
+    public static Driver readDriver(Scanner in, Driver defaultValue) {
         System.out.println("Updating driver...");
         Driver driver = new Driver();
-        driver.setId(defaultDriver.getId());
+        driver.setId(defaultValue.getId());
 
-        PersonService.readPerson(in, driver, defaultDriver);
-        driver.setRating(IOUtils.readFloat(in, "Rating (0-5)", defaultDriver.getRating(), 1));
+        PersonService.readPerson(in, driver, defaultValue);
+        driver.setRating(IOUtils.readFloat(in, "Rating (0-5)", defaultValue.getRating(), 1));
 
         return driver;
     }
