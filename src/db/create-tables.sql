@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS products;
 CREATE TABLE products
 (
     id                 SERIAL PRIMARY KEY,
-    restaurantId       INT REFERENCES restaurants (id),
+    "restaurant-id"    INT REFERENCES restaurants (id) NOT NULL,
     "name"             VARCHAR NOT NULL,
     quantity           REAL    NOT NULL,
     "measurement-unit" VARCHAR NOT NULL,

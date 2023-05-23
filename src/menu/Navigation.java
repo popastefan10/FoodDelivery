@@ -223,6 +223,14 @@ public class Navigation {
             else
                 Arrays.stream(products).forEach(ProductService::printProductShort);
         });
+        productsMenu.addOption("List all products from a restaurant", () -> {
+            Integer restaurantId = RestaurantService.readRestaurantId(in);
+            Product[] products = ProductService.getAllByRestaurantId(restaurantId);
+            if (products.length == 0)
+                IOUtils.printError("There are no products in the database! Try creating one first.");
+            else
+                Arrays.stream(products).forEach(ProductService::printProductShort);
+        });
         productsMenu.addOption("Get product", () -> {
             Product product = ProductService.getById(IOUtils.readInt(in, "Enter product id: ", 0));
             if (product == null)

@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     public static void printProductShort(Product product) {
-        System.out.printf("\t%s %s %.1f %s, %.2f lei\n", product.getId(), product.getName(), product.getQuantity(),
+        System.out.printf("\t%s %s (%.1f %s), %.2f lei\n", product.getId(), product.getName(), product.getQuantity(),
                           product.getMeasurementUnit(), product.getPrice());
     }
 
@@ -57,6 +57,10 @@ public class ProductService {
 
     public static Product[] getAll() {
         return productRepository.getAll().values().toArray(new Product[0]);
+    }
+
+    public static Product[] getAllByRestaurantId(Integer restaurantId) {
+        return productRepository.getAllByRestaurantId(restaurantId).values().toArray(new Product[0]);
     }
 
     public static Product getById(Integer id) {

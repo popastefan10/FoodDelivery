@@ -3,10 +3,7 @@ package repositories;
 import db.DatabaseConnection;
 import models.Product;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +15,18 @@ public class ProductRepository implements GenericRepository<Product> {
         connection = DatabaseConnection.getInstance();
     }
 
+    private HashMap<Integer, Product> parseProducts(ResultSet result) throws SQLException {
+        var products = new HashMap<Integer, Product>();
+        while (result.next()) {
+            var product = new Product(result.getInt(2), result.getString(3), result.getFloat(4),
+                                      result.getString(5), result.getFloat(6));
+            product.setId(result.getInt(1));
+            products.put(product.getId(), product);
+        }
+
+        return products;
+    }
+
     public static ProductRepository getInstance() {
         if (instance == null)
             instance = new ProductRepository();
@@ -25,7 +34,8 @@ public class ProductRepository implements GenericRepository<Product> {
     }
 
     public Product create(Product product) {
-        String sql = "INSERT INTO products (id, restaurantId, \"name\", quantity, \"measurement-unit\", price) VALUES" +
+        String sql = "INSERT INTO products (id, \"restaurant-id\", \"name\", quantity, \"measurement-unit\", price) " +
+                "VALUES" +
                 " (DEFAULT, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -45,18 +55,27 @@ public class ProductRepository implements GenericRepository<Product> {
     }
 
     public Map<Integer, Product> getAll() {
-        var products = new HashMap<Integer, Product>();
+        Map<Integer, Product> products = null;
         String sql = "SELECT * FROM products";
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            while (result.next()) {
-                var product = new Product(result.getInt(2), result.getString(3), result.getFloat(4),
-                                          result.getString(5), result.getFloat(6));
-                product.setId(result.getInt(1));
-                products.put(product.getId(), product);
-            }
+            products = parseProducts(statement.executeQuery(sql));
+            statement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
+    public Map<Integer, Product> getAllByRestaurantId(Integer restaurantId) {
+        var products = new HashMap<Integer, Product>();
+        String sql = "SELECT * FROM products WHERE \"restaurant-id\" = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, restaurantId);
+            products = parseProducts(statement.executeQuery());
             statement.close();
         } catch (Exception e) {
             e.printStackTrace();
