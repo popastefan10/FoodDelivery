@@ -1,13 +1,11 @@
 package menu;
 
-import models.Customer;
-import models.Driver;
-import models.Product;
-import models.Restaurant;
+import models.*;
 import services.CustomerService;
 import services.DriverService;
 import services.ProductService;
 import services.RestaurantService;
+import services.OrderService;
 import utils.IOUtils;
 
 import java.util.*;
@@ -40,13 +38,16 @@ public class Navigation {
         return instance;
     }
 
-    private void navigate(MenuID menuID) {
+    private void navigate(MenuID menuID) throws IllegalArgumentException {
         switch (menuID) {
             case BACK -> menusStack.remove(menusStack.size() - 1);
             case EXIT -> menusStack.clear();
             default -> {
                 Menu menu = menus.get(menuID);
-                menusStack.add(menu);
+                if (menu == null)
+                    IOUtils.printError("Menu not found!");
+                else
+                    menusStack.add(menu);
             }
         }
     }
@@ -264,12 +265,48 @@ public class Navigation {
         menus.put(MenuID.PRODUCTS, productsMenu);
     }
 
+    public void registerOrdersMenu() {
+        Menu ordersMenu = new Menu("Orders");
+
+        ordersMenu.addOption("Create a new order", () -> {
+            Order order = OrderService.readOrder(in);
+            OrderService.create(order);
+            System.out.println("Order added successfully!");
+        });
+        ordersMenu.addOption("List all orders", () -> {
+            Order[] orders = OrderService.getAll();
+            if (orders.length == 0)
+                IOUtils.printError("There are no orders in the database! Try creating one first.");
+            else
+                Arrays.stream(orders).forEach(OrderService::printOrderShort);
+        });
+        ordersMenu.addOption("Get order", () -> {
+            Order order = OrderService.getById(IOUtils.readInt(in, "Enter order id: ", 0));
+            if (order == null)
+                IOUtils.printError("There is no order with this id!");
+            else
+                OrderService.printOrder(order);
+        });
+        ordersMenu.addOption("Delete order", () -> {
+            int id = IOUtils.readInt(in, "Enter order id: ", 0);
+            boolean result = OrderService.delete(id);
+            if (result)
+                System.out.println("Order deleted successfully!");
+            else
+                IOUtils.printError("There is no order with this id!");
+        });
+        ordersMenu.addOption("Back", () -> navigate(MenuID.BACK));
+
+        menus.put(MenuID.ORDERS, ordersMenu);
+    }
+
     public void registerDefaultMenus() {
         registerMainMenu();
         registerCustomersMenu();
         registerDriversMenu();
         registerRestaurantsMenu();
         registerProductsMenu();
+        registerOrdersMenu();
     }
 
     public void run() {

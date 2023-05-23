@@ -1,63 +1,50 @@
 package models;
 
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order extends Entity {
     public enum OrderStatus {
-        PLACED(0),
-        IN_PREPARATION(1),
-        READY_FOR_PICKUP(2),
-        IN_DELIVERY(3),
-        DELIVERED(4);
-
-        private int value;
-
-        OrderStatus(int value) {
-            this.value = value;
-        }
-
-        int getValue() {
-            return value;
-        }
+        PLACED,
+        IN_PREPARATION,
+        READY_FOR_PICKUP,
+        IN_DELIVERY,
+        DELIVERED,
+        CANCELED
     }
 
-    private UUID id;
-    private UUID customerId;
-    private UUID restaurantId;
-    private UUID driverId;
-    private Basket basket;
+    private Integer customerId;
+    private Integer restaurantId;
+    private Integer driverId;
     private OrderStatus status;
+    private Map<Integer, OrderItem> items = new HashMap<>();
 
     public Order() {
         super();
     }
 
-    public Order(UUID customerId, UUID restaurantId, Basket basket, OrderStatus status) {
+    public Order(Integer customerId, Integer restaurantId, Integer driverId, OrderStatus status) {
         super();
         this.customerId = customerId;
         this.restaurantId = restaurantId;
-        this.basket = basket;
+        this.driverId = driverId;
         this.status = status;
     }
 
-    public UUID getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
-    public UUID getRestaurantId() {
+    public Integer getRestaurantId() {
         return restaurantId;
     }
 
-    public UUID getDriverId() {
+    public Integer getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(UUID driverId) {
+    public void setDriverId(Integer driverId) {
         this.driverId = driverId;
-    }
-
-    public Basket getBasket() {
-        return basket;
     }
 
     public OrderStatus getStatus() {
@@ -65,7 +52,35 @@ public class Order extends Entity {
     }
 
     public void setStatus(OrderStatus status) {
-        if (this.status == null || status.getValue() > this.status.getValue())
-            this.status = status;
+        this.status = status;
+    }
+
+    public Map<Integer, OrderItem> getItems() {
+        return items;
+    }
+
+    public Integer getNumberOfProducts() {
+        return items.values().stream().mapToInt(OrderItem::getQuantity).sum();
+    }
+
+    public void setItems(Map<Integer, OrderItem> items) {
+        this.items = items;
+    }
+
+    public void addItem(OrderItem item) {
+        items.put(item.getProductId(), item);
+    }
+
+    public void addProduct(Integer productId, Integer quantity) {
+        if (items.containsKey(productId)) {
+            OrderItem item = items.get(productId);
+            item.setQuantity(item.getQuantity() + quantity);
+        } else {
+            items.put(productId, new OrderItem(getId(), productId, quantity));
+        }
+    }
+
+    public OrderItem removeProduct(Integer productId) {
+        return items.remove(productId);
     }
 }

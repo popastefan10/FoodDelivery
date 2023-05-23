@@ -1,7 +1,5 @@
 package utils;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class IOUtils {
@@ -24,21 +22,6 @@ public class IOUtils {
         return input.isEmpty() ? defaultValue : input;
     }
 
-    public static LocalTime readLocalTime(Scanner in, String prompt, int indentation) {
-        prompt = "\t".repeat(indentation) + prompt;
-        String errorMessage = "\t".repeat(indentation) + "Please enter a valid time in HH:mm:ss format!";
-
-        while (true) {
-            System.out.print(prompt);
-            String localTimeString = in.nextLine();
-            try {
-                return LocalTime.parse(localTimeString);
-            } catch (DateTimeParseException e) {
-                printError(errorMessage);
-            }
-        }
-    }
-
     public static int readInt(Scanner in, String prompt, int indentation) {
         prompt = "\t".repeat(indentation) + prompt;
         String errorMessage = "\t".repeat(indentation) + "Please enter a valid integer!";
@@ -46,6 +29,23 @@ public class IOUtils {
         while (true) {
             System.out.print(prompt);
             String intString = in.nextLine();
+            try {
+                return Integer.parseInt(intString);
+            } catch (NumberFormatException e) {
+                printError(errorMessage);
+            }
+        }
+    }
+
+    public static Integer readInt(Scanner in, String prompt, Integer defaultValue, int indentation) {
+        prompt = "\t".repeat(indentation) + prompt + " (default: " + defaultValue + "): ";
+        String errorMessage = "\t".repeat(indentation) + "Please enter a valid integer!";
+
+        while (true) {
+            System.out.print(prompt);
+            String intString = in.nextLine();
+            if (intString.isEmpty())
+                return defaultValue;
             try {
                 return Integer.parseInt(intString);
             } catch (NumberFormatException e) {
@@ -84,6 +84,22 @@ public class IOUtils {
             } catch (NumberFormatException | NullPointerException e) {
                 printError(errorMessage);
             }
+        }
+    }
+
+    public static boolean readBoolean(Scanner in, String prompt, int indentation) {
+        prompt = "\t".repeat(indentation) + prompt + " (y/n): ";
+        String errorMessage = "\t".repeat(indentation) + "Please enter yes (y) or no (n)!";
+
+        while (true) {
+            System.out.print(prompt);
+            String booleanString = in.nextLine();
+            if (booleanString.toLowerCase().startsWith("y"))
+                return true;
+            else if (booleanString.toLowerCase().startsWith("n"))
+                return false;
+            else
+                printError(errorMessage);
         }
     }
 }

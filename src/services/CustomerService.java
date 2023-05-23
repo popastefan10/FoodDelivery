@@ -4,6 +4,7 @@ import models.Customer;
 import repositories.CustomerRepository;
 import utils.IOUtils;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class CustomerService {
@@ -28,6 +29,21 @@ public class CustomerService {
         customer.setAddress(IOUtils.readString(in, "Address", defaultValue.getAddress(), 1));
 
         return customer;
+    }
+
+    public static Integer readCustomerId(Scanner in) {
+        Map<Integer, Customer> customers = customerRepository.getAll();
+        System.out.println("Here are all available customers:");
+        for (Customer customer : customers.values())
+            printCustomerShort(customer);
+        System.out.println();
+
+        while (true) {
+            Integer customerId = IOUtils.readInt(in, "Choose a customer id: ", 0);
+            if (customers.containsKey(customerId))
+                return customerId;
+            System.out.println(IOUtils.ANSI_RED + "There is no customer with this id!" + IOUtils.ANSI_RESET);
+        }
     }
 
     public static void printCustomer(Customer customer) {

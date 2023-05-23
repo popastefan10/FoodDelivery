@@ -4,6 +4,7 @@ import models.Product;
 import repositories.ProductRepository;
 import utils.IOUtils;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class ProductService {
@@ -35,6 +36,21 @@ public class ProductService {
         product.setPrice(IOUtils.readFloat(in, "Price", defaultValue.getPrice(), 1));
 
         return product;
+    }
+
+    public static Integer readProductId(Scanner in, Integer restaurantId) {
+        Map<Integer, Product> products = productRepository.getAllByRestaurantId(restaurantId);
+        System.out.println("Here are all available products:");
+        for (Product product : products.values())
+            printProductShort(product);
+        System.out.println();
+
+        while (true) {
+            Integer productId = IOUtils.readInt(in, "Choose a product id: ", 0);
+            if (products.containsKey(productId))
+                return productId;
+            System.out.println(IOUtils.ANSI_RED + "There is no product with this id!" + IOUtils.ANSI_RESET);
+        }
     }
 
     public static void printProduct(Product product) {

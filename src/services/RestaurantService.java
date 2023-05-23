@@ -35,19 +35,6 @@ public class RestaurantService {
         return restaurant;
     }
 
-    public static void printRestaurant(Restaurant restaurant) {
-        System.out.println("Restaurant with id " + restaurant.getId() + ":");
-        System.out.println("\tEmail: " + restaurant.getEmail());
-        System.out.println("\tPhone number: " + restaurant.getPhoneNumber());
-        System.out.println("\tName: " + restaurant.getName());
-        System.out.println("\tAddress: " + restaurant.getAddress());
-        System.out.println("\tRating: " + restaurant.getRating());
-    }
-
-    public static void printRestaurantShort(Restaurant restaurant) {
-        System.out.printf("\t%s %s, %s%n", restaurant.getId(), restaurant.getName(), restaurant.getAddress());
-    }
-
     public static Integer readRestaurantId(Scanner in) {
         Map<Integer, Restaurant> restaurants = restaurantRepository.getAll();
         System.out.println("Here are all available restaurants:");
@@ -61,6 +48,19 @@ public class RestaurantService {
                 return restaurantId;
             System.out.println(IOUtils.ANSI_RED + "There is no restaurant with this id!" + IOUtils.ANSI_RESET);
         }
+    }
+
+    public static void printRestaurant(Restaurant restaurant) {
+        System.out.println("Restaurant with id " + restaurant.getId() + ":");
+        System.out.println("\tEmail: " + restaurant.getEmail());
+        System.out.println("\tPhone number: " + restaurant.getPhoneNumber());
+        System.out.println("\tName: " + restaurant.getName());
+        System.out.println("\tAddress: " + restaurant.getAddress());
+        System.out.println("\tRating: " + restaurant.getRating());
+    }
+
+    public static void printRestaurantShort(Restaurant restaurant) {
+        System.out.printf("\t%s %s, %s%n", restaurant.getId(), restaurant.getName(), restaurant.getAddress());
     }
 
     public static Restaurant create(Restaurant restaurant) {

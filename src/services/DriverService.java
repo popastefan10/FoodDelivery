@@ -4,6 +4,7 @@ import models.Driver;
 import repositories.DriverRepository;
 import utils.IOUtils;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class DriverService {
@@ -28,6 +29,21 @@ public class DriverService {
         driver.setRating(IOUtils.readFloat(in, "Rating (0-5)", defaultValue.getRating(), 1));
 
         return driver;
+    }
+
+    public static Integer readDriverId(Scanner in) {
+        Map<Integer, Driver> drivers = driverRepository.getAll();
+        System.out.println("Here are all available drivers:");
+        for (Driver driver : drivers.values())
+            printDriverShort(driver);
+        System.out.println();
+
+        while (true) {
+            Integer driverId = IOUtils.readInt(in, "Choose a driver id: ", 0);
+            if (drivers.containsKey(driverId))
+                return driverId;
+            System.out.println(IOUtils.ANSI_RED + "There is no driver with this id!" + IOUtils.ANSI_RESET);
+        }
     }
 
     public static void printDriver(Driver driver) {
