@@ -8,14 +8,25 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class ProductService {
-    public static final ProductRepository productRepository = ProductRepository.getInstance();
-    private static final AuditService auditService = AuditService.getInstance();
+    private static ProductService instance = null;
+    public final ProductRepository productRepository = ProductRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
+    private final RestaurantService restaurantService = RestaurantService.getInstance();
 
-    public static Product readProduct(Scanner in) {
+    private ProductService() {
+    }
+
+    public static ProductService getInstance() {
+        if (instance == null)
+            instance = new ProductService();
+        return instance;
+    }
+
+    public Product readProduct(Scanner in) {
         System.out.println("Creating a new product...");
         Product product = new Product();
 
-        Integer restaurantId = RestaurantService.readRestaurantId(in);
+        Integer restaurantId = restaurantService.readRestaurantId(in);
         product.setRestaurantId(restaurantId);
         product.setName(IOUtils.readString(in, "Name: ", 1));
         product.setQuantity(IOUtils.readFloat(in, "Quantity: ", 1));
@@ -25,7 +36,7 @@ public class ProductService {
         return product;
     }
 
-    public static Product readProduct(Scanner in, Product defaultValue) {
+    public Product readProduct(Scanner in, Product defaultValue) {
         System.out.println("Creating a new product...");
         Product product = new Product();
         product.setId(defaultValue.getId());
@@ -39,9 +50,9 @@ public class ProductService {
         return product;
     }
 
-    public static Integer readProductId(Scanner in, Integer restaurantId) {
+    public Integer readProductId(Scanner in, Integer restaurantId) {
         Map<Integer, Product> products = productRepository.getAllByRestaurantId(restaurantId);
-        System.out.println("Here are all available products:");
+        System.out.println("\nHere are all available products:");
         for (Product product : products.values())
             printProductShort(product);
         System.out.println();
@@ -54,7 +65,7 @@ public class ProductService {
         }
     }
 
-    public static void printProduct(Product product) {
+    public void printProduct(Product product) {
         System.out.println("Product with id " + product.getId() + ":");
         System.out.println("\tRestaurant id: " + product.getRestaurantId());
         System.out.println("\tName: " + product.getName());
@@ -63,37 +74,37 @@ public class ProductService {
         System.out.println("\tPrice: " + product.getPrice());
     }
 
-    public static void printProductShort(Product product) {
-        System.out.printf("\t%s %s (%.1f %s), %.2f lei\n", product.getId(), product.getName(), product.getQuantity(),
+    public void printProductShort(Product product) {
+        System.out.printf("\t%s %s (%.1f %s), %.2f RON\n", product.getId(), product.getName(), product.getQuantity(),
                           product.getMeasurementUnit(), product.getPrice());
     }
 
-    public static Product create(Product product) {
+    public Product create(Product product) {
         auditService.logAction("product_create");
         return productRepository.create(product);
     }
 
-    public static Product[] getAll() {
+    public Product[] getAll() {
         auditService.logAction("product_get_all");
         return productRepository.getAll().values().toArray(new Product[0]);
     }
 
-    public static Product[] getAllByRestaurantId(Integer restaurantId) {
+    public Product[] getAllByRestaurantId(Integer restaurantId) {
         auditService.logAction("product_get_all_by_restaurant_id");
         return productRepository.getAllByRestaurantId(restaurantId).values().toArray(new Product[0]);
     }
 
-    public static Product getById(Integer id) {
+    public Product getById(Integer id) {
         auditService.logAction("product_get_by_id");
         return productRepository.getById(id);
     }
 
-    public static Product update(Product product) {
+    public Product update(Product product) {
         auditService.logAction("product_update");
         return productRepository.update(product);
     }
 
-    public static boolean delete(Integer id) {
+    public boolean delete(Integer id) {
         auditService.logAction("product_delete");
         return productRepository.delete(id);
     }

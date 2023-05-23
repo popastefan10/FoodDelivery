@@ -8,31 +8,42 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class DriverService {
-    private static final DriverRepository driverRepository = DriverRepository.getInstance();
-    private static final AuditService auditService = AuditService.getInstance();
+    private static DriverService instance = null;
+    private final DriverRepository driverRepository = DriverRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
+    private final PersonService personService = PersonService.getInstance();
 
-    public static Driver readDriver(Scanner in) {
+    private DriverService() {
+    }
+
+    public static DriverService getInstance() {
+        if (instance == null)
+            instance = new DriverService();
+        return instance;
+    }
+
+    public Driver readDriver(Scanner in) {
         System.out.println("Creating a new driver...");
         Driver driver = new Driver();
 
-        PersonService.readPerson(in, driver);
+        personService.readPerson(in, driver);
         driver.setRating(IOUtils.readFloat(in, "Rating (0-5): ", 1));
 
         return driver;
     }
 
-    public static Driver readDriver(Scanner in, Driver defaultValue) {
+    public Driver readDriver(Scanner in, Driver defaultValue) {
         System.out.println("Updating driver...");
         Driver driver = new Driver();
         driver.setId(defaultValue.getId());
 
-        PersonService.readPerson(in, driver, defaultValue);
+        personService.readPerson(in, driver, defaultValue);
         driver.setRating(IOUtils.readFloat(in, "Rating (0-5)", defaultValue.getRating(), 1));
 
         return driver;
     }
 
-    public static Integer readDriverId(Scanner in) {
+    public Integer readDriverId(Scanner in) {
         Map<Integer, Driver> drivers = driverRepository.getAll();
         System.out.println("Here are all available drivers:");
         for (Driver driver : drivers.values())
@@ -47,37 +58,37 @@ public class DriverService {
         }
     }
 
-    public static void printDriver(Driver driver) {
+    public void printDriver(Driver driver) {
         System.out.println("Driver with id " + driver.getId() + ":");
-        PersonService.printPerson(driver);
+        personService.printPerson(driver);
         System.out.println("\tRating: " + driver.getRating());
     }
 
-    public static void printDriverShort(Driver driver) {
+    public void printDriverShort(Driver driver) {
         System.out.printf("\t%s\t%s %s\n", driver.getId(), driver.getFirstName(), driver.getLastName());
     }
 
-    public static void create(Driver driver) {
+    public void create(Driver driver) {
         auditService.logAction("driver_create");
         driverRepository.create(driver);
     }
 
-    public static Driver[] getAll() {
+    public Driver[] getAll() {
         auditService.logAction("driver_get_all");
         return driverRepository.getAll().values().toArray(new Driver[0]);
     }
 
-    public static Driver getById(Integer driverId) {
+    public Driver getById(Integer driverId) {
         auditService.logAction("driver_get_by_id");
         return driverRepository.getById(driverId);
     }
 
-    public static Driver update(Driver driver) {
+    public Driver update(Driver driver) {
         auditService.logAction("driver_update");
         return driverRepository.update(driver);
     }
 
-    public static boolean delete(Integer driverId) {
+    public boolean delete(Integer driverId) {
         auditService.logAction("driver_delete");
         return driverRepository.delete(driverId);
     }

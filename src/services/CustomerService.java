@@ -8,31 +8,42 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class CustomerService {
-    private static final CustomerRepository customerRepository = CustomerRepository.getInstance();
-    private static final AuditService auditService = AuditService.getInstance();
+    private static CustomerService instance = null;
+    private final CustomerRepository customerRepository = CustomerRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
+    private final PersonService personService = PersonService.getInstance();
 
-    public static Customer readCustomer(Scanner in) {
+    private CustomerService() {
+    }
+
+    public static CustomerService getInstance() {
+        if (instance == null)
+            instance = new CustomerService();
+        return instance;
+    }
+
+    public Customer readCustomer(Scanner in) {
         System.out.println("Creating a new customer...");
         Customer customer = new Customer();
 
-        PersonService.readPerson(in, customer);
+        personService.readPerson(in, customer);
         customer.setAddress(IOUtils.readString(in, "Address: ", 1));
 
         return customer;
     }
 
-    public static Customer readCustomer(Scanner in, Customer defaultValue) {
+    public Customer readCustomer(Scanner in, Customer defaultValue) {
         System.out.println("Updating customer...");
         Customer customer = new Customer();
         customer.setId(defaultValue.getId());
 
-        PersonService.readPerson(in, customer, defaultValue);
+        personService.readPerson(in, customer, defaultValue);
         customer.setAddress(IOUtils.readString(in, "Address", defaultValue.getAddress(), 1));
 
         return customer;
     }
 
-    public static Integer readCustomerId(Scanner in) {
+    public Integer readCustomerId(Scanner in) {
         Map<Integer, Customer> customers = customerRepository.getAll();
         System.out.println("Here are all available customers:");
         for (Customer customer : customers.values())
@@ -47,38 +58,38 @@ public class CustomerService {
         }
     }
 
-    public static void printCustomer(Customer customer) {
+    public void printCustomer(Customer customer) {
         System.out.println("Customer with id " + customer.getId() + ":");
-        PersonService.printPerson(customer);
+        personService.printPerson(customer);
         System.out.println("\tAddress: " + customer.getAddress());
     }
 
-    public static void printCustomerShort(Customer customer) {
+    public void printCustomerShort(Customer customer) {
         System.out.printf("\t%s\t%s %s\n", customer.getId(), customer.getFirstName(),
                           customer.getLastName());
     }
 
-    public static Customer create(Customer customer) {
+    public Customer create(Customer customer) {
         auditService.logAction("customer_create");
         return customerRepository.create(customer);
     }
 
-    public static Customer[] getAll() {
+    public Customer[] getAll() {
         auditService.logAction("customer_get_all");
         return customerRepository.getAll().values().toArray(new Customer[0]);
     }
 
-    public static Customer getById(Integer id) {
+    public Customer getById(Integer id) {
         auditService.logAction("customer_get_by_id");
         return customerRepository.getById(id);
     }
 
-    public static Customer update(Customer customer) {
+    public Customer update(Customer customer) {
         auditService.logAction("customer_update");
         return customerRepository.update(customer);
     }
 
-    public static boolean delete(Integer id) {
+    public boolean delete(Integer id) {
         auditService.logAction("customer_delete");
         return customerRepository.delete(id);
     }

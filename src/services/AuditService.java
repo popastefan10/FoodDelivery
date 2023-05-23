@@ -36,8 +36,9 @@ public class AuditService {
             fw.write(',');
             fw.write(LocalDateTime.now().toString());
             fw.write('\n');
-            fw.close();
+            fw.flush();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Could not write to audit file");
         }
     }

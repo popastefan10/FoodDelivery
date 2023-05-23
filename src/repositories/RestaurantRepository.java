@@ -3,19 +3,30 @@ package repositories;
 import db.DatabaseConnection;
 import models.Restaurant;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RestaurantRepository implements GenericRepository<Restaurant> {
+public class RestaurantRepository extends GenericRepository<Restaurant> {
     private static RestaurantRepository instance = null;
-    private final Connection connection;
 
     private RestaurantRepository() {
         connection = DatabaseConnection.getInstance();
+    }
+
+    private PreparedStatement populateStatement(
+            PreparedStatement statement, Restaurant restaurant
+    ) throws SQLException {
+        statement.setString(1, restaurant.getEmail());
+        statement.setString(2, restaurant.getPhoneNumber());
+        statement.setString(3, restaurant.getName());
+        statement.setString(4, restaurant.getAddress());
+        statement.setFloat(5, restaurant.getRating());
+
+        return statement;
     }
 
     public static RestaurantRepository getInstance() {
@@ -24,17 +35,17 @@ public class RestaurantRepository implements GenericRepository<Restaurant> {
         return instance;
     }
 
+    @Override
+    protected String getTableName() {
+        return "restaurants";
+    }
+
     public Restaurant create(Restaurant restaurant) {
         String sql = "INSERT INTO restaurants (id, email, \"phone-number\", name, address, rating) " +
                 "VALUES" +
                 "(DEFAULT, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, restaurant.getEmail());
-            statement.setString(2, restaurant.getPhoneNumber());
-            statement.setString(3, restaurant.getName());
-            statement.setString(4, restaurant.getAddress());
-            statement.setFloat(5, restaurant.getRating());
+            var statement = populateStatement(connection.prepareStatement(sql), restaurant);
             statement.executeUpdate();
             statement.close();
 
@@ -93,12 +104,7 @@ public class RestaurantRepository implements GenericRepository<Restaurant> {
     public Restaurant update(Restaurant restaurant) {
         String sql = "UPDATE restaurants SET email = ?, \"phone-number\" = ?, name = ?, address = ?, rating = ? WHERE id = ?";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, restaurant.getEmail());
-            statement.setString(2, restaurant.getPhoneNumber());
-            statement.setString(3, restaurant.getName());
-            statement.setString(4, restaurant.getAddress());
-            statement.setFloat(5, restaurant.getRating());
+            var statement = populateStatement(connection.prepareStatement(sql), restaurant);
             statement.setInt(6, restaurant.getId());
             int result = statement.executeUpdate();
             statement.close();
@@ -109,21 +115,5 @@ public class RestaurantRepository implements GenericRepository<Restaurant> {
         }
 
         return null;
-    }
-
-    public boolean delete(Integer id) {
-        String sql = "DELETE FROM restaurants WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            int result = statement.executeUpdate();
-            statement.close();
-
-            return result > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

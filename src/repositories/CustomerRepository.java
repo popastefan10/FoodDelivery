@@ -3,19 +3,25 @@ package repositories;
 import db.DatabaseConnection;
 import models.Customer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerRepository implements GenericRepository<Customer> {
+public class CustomerRepository extends GenericRepository<Customer> {
     private static CustomerRepository instance = null;
-    private final Connection connection;
 
     private CustomerRepository() {
         connection = DatabaseConnection.getInstance();
+    }
+
+    private PreparedStatement populateFields(PreparedStatement statement, Customer customer) throws SQLException {
+        statement.setString(1, customer.getEmail());
+        statement.setString(2, customer.getPhoneNumber());
+        statement.setString(3, customer.getFirstName());
+        statement.setString(4, customer.getLastName());
+        statement.setString(5, customer.getAddress());
+
+        return statement;
     }
 
     public static CustomerRepository getInstance() {
@@ -24,17 +30,17 @@ public class CustomerRepository implements GenericRepository<Customer> {
         return instance;
     }
 
+    @Override
+    protected String getTableName() {
+        return "customers";
+    }
+
     public Customer create(Customer customer) {
         String sql = "INSERT INTO customers (id, email, \"phone-number\", \"first-name\", \"last-name\", address) " +
                 "VALUES" +
                 "(DEFAULT, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, customer.getEmail());
-            statement.setString(2, customer.getPhoneNumber());
-            statement.setString(3, customer.getFirstName());
-            statement.setString(4, customer.getLastName());
-            statement.setString(5, customer.getAddress());
+            var statement = populateFields(connection.prepareStatement(sql), customer);
             statement.executeUpdate();
             statement.close();
 
@@ -93,12 +99,7 @@ public class CustomerRepository implements GenericRepository<Customer> {
     public Customer update(Customer customer) {
         String sql = "UPDATE customers SET email = ?, \"phone-number\" = ?, \"first-name\" = ?, \"last-name\" = ?, address = ? WHERE id = ?";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, customer.getEmail());
-            statement.setString(2, customer.getPhoneNumber());
-            statement.setString(3, customer.getFirstName());
-            statement.setString(4, customer.getLastName());
-            statement.setString(5, customer.getAddress());
+            var statement = populateFields(connection.prepareStatement(sql), customer);
             statement.setInt(6, customer.getId());
             int result = statement.executeUpdate();
             statement.close();
@@ -109,21 +110,5 @@ public class CustomerRepository implements GenericRepository<Customer> {
         }
 
         return null;
-    }
-
-    public boolean delete(Integer id) {
-        String sql = "DELETE FROM customers WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            int result = statement.executeUpdate();
-            statement.close();
-
-            return result > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

@@ -7,10 +7,20 @@ import utils.IOUtils;
 import java.util.*;
 
 public class RestaurantService {
+    private static RestaurantService instance = null;
     private static final RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
     private static final AuditService auditService = AuditService.getInstance();
 
-    public static Restaurant readRestaurant(Scanner in) {
+    private RestaurantService() {
+    }
+
+    public static RestaurantService getInstance() {
+        if (instance == null)
+            instance = new RestaurantService();
+        return instance;
+    }
+
+    public Restaurant readRestaurant(Scanner in) {
         System.out.println("Creating a new restaurant...");
         Restaurant restaurant = new Restaurant();
         restaurant.setEmail(IOUtils.readString(in, "Email: ", 1));
@@ -22,7 +32,7 @@ public class RestaurantService {
         return restaurant;
     }
 
-    public static Restaurant readRestaurant(Scanner in, Restaurant defaultValue) {
+    public Restaurant readRestaurant(Scanner in, Restaurant defaultValue) {
         System.out.println("Creating a new restaurant...");
         Restaurant restaurant = new Restaurant();
         restaurant.setId(defaultValue.getId());
@@ -36,7 +46,7 @@ public class RestaurantService {
         return restaurant;
     }
 
-    public static Integer readRestaurantId(Scanner in) {
+    public Integer readRestaurantId(Scanner in) {
         Map<Integer, Restaurant> restaurants = restaurantRepository.getAll();
         System.out.println("Here are all available restaurants:");
         for (Restaurant restaurant : restaurants.values())
@@ -51,7 +61,7 @@ public class RestaurantService {
         }
     }
 
-    public static void printRestaurant(Restaurant restaurant) {
+    public void printRestaurant(Restaurant restaurant) {
         System.out.println("Restaurant with id " + restaurant.getId() + ":");
         System.out.println("\tEmail: " + restaurant.getEmail());
         System.out.println("\tPhone number: " + restaurant.getPhoneNumber());
@@ -60,31 +70,31 @@ public class RestaurantService {
         System.out.println("\tRating: " + restaurant.getRating());
     }
 
-    public static void printRestaurantShort(Restaurant restaurant) {
+    public void printRestaurantShort(Restaurant restaurant) {
         System.out.printf("\t%s %s, %s%n", restaurant.getId(), restaurant.getName(), restaurant.getAddress());
     }
 
-    public static Restaurant create(Restaurant restaurant) {
+    public Restaurant create(Restaurant restaurant) {
         auditService.logAction("restaurant_create");
         return restaurantRepository.create(restaurant);
     }
 
-    public static Restaurant[] getAll() {
+    public Restaurant[] getAll() {
         auditService.logAction("restaurant_get_all");
         return restaurantRepository.getAll().values().toArray(new Restaurant[0]);
     }
 
-    public static Restaurant getById(Integer id) {
+    public Restaurant getById(Integer id) {
         auditService.logAction("restaurant_get_by_id");
         return restaurantRepository.getById(id);
     }
 
-    public static Restaurant update(Restaurant restaurant) {
+    public Restaurant update(Restaurant restaurant) {
         auditService.logAction("restaurant_update");
         return restaurantRepository.update(restaurant);
     }
 
-    public static boolean delete(Integer id) {
+    public boolean delete(Integer id) {
         auditService.logAction("restaurant_delete");
         return restaurantRepository.delete(id);
     }

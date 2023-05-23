@@ -1,6 +1,6 @@
 # FoodDelivery
 
-Food delivery API I made as an university project.
+Food delivery API I made as a university project.
 
 ## TODO
 

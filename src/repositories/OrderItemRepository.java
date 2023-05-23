@@ -3,16 +3,14 @@ package repositories;
 import db.DatabaseConnection;
 import models.OrderItem;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderItemRepository implements GenericRepository<OrderItem> {
+public class OrderItemRepository extends GenericRepository<OrderItem> {
     private static OrderItemRepository instance = null;
-    private final Connection connection;
 
     private OrderItemRepository() {
         connection = DatabaseConnection.getInstance();
@@ -38,6 +36,11 @@ public class OrderItemRepository implements GenericRepository<OrderItem> {
         if (instance == null)
             instance = new OrderItemRepository();
         return instance;
+    }
+
+    @Override
+    protected String getTableName() {
+        return "\"order-items\"";
     }
 
     public OrderItem create(OrderItem item) {
@@ -119,21 +122,5 @@ public class OrderItemRepository implements GenericRepository<OrderItem> {
         }
 
         return null;
-    }
-
-    public boolean delete(Integer id) {
-        String sql = "DELETE FROM \"order-items\" WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            int result = statement.executeUpdate();
-            statement.close();
-
-            return result > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

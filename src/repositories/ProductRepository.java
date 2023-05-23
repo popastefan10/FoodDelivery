@@ -7,9 +7,8 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductRepository implements GenericRepository<Product> {
+public class ProductRepository extends GenericRepository<Product> {
     private static ProductRepository instance = null;
-    private final Connection connection;
 
     private ProductRepository() {
         connection = DatabaseConnection.getInstance();
@@ -31,6 +30,11 @@ public class ProductRepository implements GenericRepository<Product> {
         if (instance == null)
             instance = new ProductRepository();
         return instance;
+    }
+
+    @Override
+    protected String getTableName() {
+        return "products";
     }
 
     public Product create(Product product) {
@@ -124,21 +128,5 @@ public class ProductRepository implements GenericRepository<Product> {
         }
 
         return null;
-    }
-
-    public boolean delete(Integer id) {
-        String sql = "DELETE FROM products WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            int result = statement.executeUpdate();
-            statement.close();
-
-            return result > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

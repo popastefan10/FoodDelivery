@@ -1,7 +1,7 @@
 package menu;
 
 public class MenuOption {
-    private String description;
+    private final String description;
     private Runnable action;
 
     public MenuOption(String description) {
