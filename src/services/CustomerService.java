@@ -19,6 +19,17 @@ public class CustomerService {
         return customer;
     }
 
+    public static Customer readCustomer(Scanner in, Customer defaultCustomer) {
+        System.out.println("Updating customer...");
+        Customer customer = new Customer();
+        customer.setId(defaultCustomer.getId());
+
+        PersonService.readPerson(in, customer, defaultCustomer);
+        customer.setAddress(IOUtils.readString(in, "Address", defaultCustomer.getAddress(), 1));
+
+        return customer;
+    }
+
     public static void printCustomer(Customer customer) {
         System.out.println("Customer with id " + customer.getId() + ":");
         PersonService.printPerson(customer);
@@ -40,6 +51,10 @@ public class CustomerService {
 
     public static Customer getById(Integer id) {
         return customerRepository.getById(id);
+    }
+
+    public static Customer update(Customer customer) {
+        return customerRepository.update(customer);
     }
 
     public static boolean delete(Integer id) {

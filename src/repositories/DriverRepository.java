@@ -90,6 +90,24 @@ public class DriverRepository implements GenericRepository<Driver> {
     }
 
     public Driver update(Driver driver) {
+        String sql = "UPDATE drivers SET email = ?, \"phone-number\" = ?, \"first-name\" = ?, \"last-name\" = ?, " +
+                "rating = ? WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, driver.getEmail());
+            statement.setString(2, driver.getPhoneNumber());
+            statement.setString(3, driver.getFirstName());
+            statement.setString(4, driver.getLastName());
+            statement.setFloat(5, driver.getRating());
+            statement.setInt(6, driver.getId());
+            int result = statement.executeUpdate();
+            statement.close();
+
+            return result > 0 ? driver : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

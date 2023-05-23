@@ -26,6 +26,7 @@ public class Navigation {
         BACK,
         EXIT
     }
+
     private final Map<MenuID, Menu> menus = new HashMap<>();
     private final List<Menu> menusStack = new ArrayList<>();
 
@@ -83,6 +84,19 @@ public class Navigation {
             else
                 CustomerService.printCustomer(customer);
         });
+        customersMenu.addOption("Update customer", () -> {
+            int id = IOUtils.readInt(in, "Enter customer id: ", 0);
+            Customer customer = CustomerService.getById(id);
+            if (customer == null)
+                IOUtils.printError("There is no customer with this id!");
+            else {
+                Customer updatedCustomer = CustomerService.update(CustomerService.readCustomer(in, customer));
+                if (updatedCustomer == null)
+                    IOUtils.printError("Update failed!");
+                else
+                    System.out.println("Customer updated successfully!");
+            }
+        });
         customersMenu.addOption("Delete customer", () -> {
             int id = IOUtils.readInt(in, "Enter customer id: ", 0);
             boolean result = CustomerService.delete(id);
@@ -101,26 +115,39 @@ public class Navigation {
 
         driversMenu.addOption("Create a new driver", () -> {
             Driver driver = DriverService.readDriver(in);
-            DriverService.addDriver(driver);
+            DriverService.create(driver);
             System.out.println("Driver added successfully!");
         });
         driversMenu.addOption("List all drivers", () -> {
-            Driver[] drivers = DriverService.getDrivers();
+            Driver[] drivers = DriverService.getAll();
             if (drivers.length == 0)
                 IOUtils.printError("There are no drivers in the database! Try creating one first.\n");
             else
                 Arrays.stream(drivers).forEach(DriverService::printDriverShort);
         });
         driversMenu.addOption("Get driver", () -> {
-            Driver driver = DriverService.getDriverById(IOUtils.readInt(in, "Enter driver id: ", 0));
+            Driver driver = DriverService.getById(IOUtils.readInt(in, "Enter driver id: ", 0));
             if (driver == null)
                 IOUtils.printError("There is no driver with this id!");
             else
                 DriverService.printDriver(driver);
         });
+        driversMenu.addOption("Update driver", () -> {
+            int id = IOUtils.readInt(in, "Enter driver id: ", 0);
+            Driver driver = DriverService.getById(id);
+            if (driver == null)
+                IOUtils.printError("There is no customer with this id!");
+            else {
+                Driver updatedDriver = DriverService.update(DriverService.readDriver(in, driver));
+                if (updatedDriver == null)
+                    IOUtils.printError("Update failed!");
+                else
+                    System.out.println("Driver updated successfully!");
+            }
+        });
         driversMenu.addOption("Delete driver", () -> {
             int id = IOUtils.readInt(in, "Enter driver id: ", 0);
-            boolean result = DriverService.deleteDriver(id);
+            boolean result = DriverService.delete(id);
             if (result)
                 System.out.println("Driver deleted successfully!");
             else
